@@ -1,6 +1,7 @@
 package com.cepheid.cloud.skel.controller;
 
 import com.cepheid.cloud.skel.model.Item;
+import com.cepheid.cloud.skel.model.enums.State;
 import com.cepheid.cloud.skel.service.impl.ItemServiceImpl;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,13 @@ public class ItemController {
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    public Item findItemByName(@QueryParam("name") String name) {
-        return itemServiceImpl.findByName(name).get();
+    public Collection<Item> findItemByName(@QueryParam("name") String name, @QueryParam("state") String state) {
+        if (name != null && state != null)
+            return itemServiceImpl.findByNameAndState(name, State.valueOf(state));
+        else if (name != null)
+            return itemServiceImpl.findByName(name);
+        else
+            return itemServiceImpl.findByState(State.valueOf(state));
     }
 
     @PUT

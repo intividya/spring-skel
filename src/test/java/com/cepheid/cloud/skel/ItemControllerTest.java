@@ -14,6 +14,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 public class ItemControllerTest extends TestBase {
@@ -30,9 +31,11 @@ public class ItemControllerTest extends TestBase {
     @Test
     public void testSearchItems() {
         Builder itemController = getBuilder("/app/api/1.0/items/search?name=name1");
-        Item item = itemController.get(Item.class);
-        Assert.assertNotNull(item);
-        Assert.assertEquals(item.getName(), "name1");
+        List<Item> items = itemController.get(new GenericType<List<Item>>() {
+        });
+        Assert.assertNotNull(items);
+        Assert.assertEquals(1, items.size());
+        Assert.assertEquals(items.get(0).getName(), "name1");
     }
 
     @Test
